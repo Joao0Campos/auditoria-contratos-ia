@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Segredos
+.env
+
+# Temporários e logs
+*.tmp*
+*.log
+
+# Dados de entrada/saída (documentos e planilhas com dados pessoais de clientes)
+*.xlsx
+*.xls
+*.csv
+*.pdf
+CONTRATOS_GERAIS/
+PJ_GERAIS/
+MATRICULAS/
+Plan_com_info/
+backups/
+
+# IDEs
+.vscode/
+.idea/

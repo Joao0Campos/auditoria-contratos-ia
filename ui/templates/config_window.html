@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root { --laranja:#ff9142; --laranja-forte:#ff7b20; --laranja-esc:#e2650a; --laranja-claro:#ffb37a; --escuro:#1c1210; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100%; }
+  body {
+    font-family:'Inter', system-ui, -apple-system, sans-serif; color:#fff;
+    background:radial-gradient(circle at 15% 0%, #3a2a1f 0%, #1c1210 38%, #0a0808 100%);
+    background-attachment:fixed; overflow-x:hidden;
+  }
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.25); border-radius:6px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  input:focus-visible, button:focus-visible { outline:2px solid var(--laranja); outline-offset:2px; }
+  input::placeholder { color:rgba(255,255,255,.45); }
+  .orb { position:fixed; border-radius:50%; filter:blur(10px); pointer-events:none; z-index:0; }
+  .orb-1 { top:-120px; left:-140px; width:420px; height:420px; background:radial-gradient(circle, rgba(255,123,32,.35), transparent 70%); }
+  .orb-2 { top:200px; right:-160px; width:460px; height:460px; background:radial-gradient(circle, rgba(255,145,66,.22), transparent 70%); }
+  .wrap { position:relative; z-index:1; width:100%; max-width:900px; margin:0 auto; padding:32px 24px 48px; }
+  .glass {
+    position:relative; background:rgba(255,255,255,.07);
+    backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%);
+    border:1px solid rgba(255,255,255,.14); border-radius:24px;
+    box-shadow:0 8px 32px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.1); margin-bottom:22px;
+  }
+  .topo { display:flex; align-items:center; gap:16px; padding:24px 34px; }
+  .topo .logo {
+    width:46px; height:46px; border-radius:14px; flex:none;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18);
+    display:flex; align-items:center; justify-content:center; box-shadow:inset 0 1px 0 rgba(255,255,255,.2);
+  }
+  .topo .marca { font-family:'Poppins', sans-serif; font-weight:800; font-size:21px; letter-spacing:.2px; }
+  .topo .marca span { color:var(--laranja); }
+  .topo .sub { color:rgba(255,255,255,.62); font-size:13.5px; font-weight:500; margin-top:3px; }
+  .secao { padding:30px 34px; }
+  .titulo { font-family:'Poppins', sans-serif; font-weight:700; font-size:17px; }
+  .titulo-linha { display:flex; align-items:baseline; gap:10px; margin-bottom:18px; }
+  .titulo-hint { font-size:13px; color:rgba(255,255,255,.5); font-weight:500; }
+  .pasta {
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+    padding:18px 20px; margin-bottom:12px; background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1); border-radius:16px;
+  }
+  .pasta:last-child { margin-bottom:0; }
+  .pasta .rot { font-size:14.5px; font-weight:700; margin-bottom:6px; }
+  .pasta .rot .chave { color:rgba(255,255,255,.5); font-weight:500; }
+  .pasta .sel { display:flex; align-items:center; gap:7px; font-size:13.5px; color:var(--laranja-claro); font-weight:600; }
+  .pasta .sel .cam { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:360px; }
+  button { font-family:inherit; cursor:pointer; border:none; transition:filter .12s ease, box-shadow .12s ease, background .12s ease; }
+  button:hover { filter:brightness(1.05); }
+  .btn-pasta {
+    background:rgba(255,145,66,.9); color:var(--escuro); border:1px solid rgba(255,255,255,.3);
+    padding:12px 24px; border-radius:999px; font-size:13.5px; font-weight:700; white-space:nowrap; flex:none;
+    box-shadow:0 4px 14px rgba(255,123,32,.35), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .btn-pasta:hover { background:rgba(255,161,94,.95); filter:none; }
+  .busca { position:relative; margin-bottom:14px; }
+  .busca svg { position:absolute; left:16px; top:13px; }
+  .busca input {
+    width:100%; padding:13px 16px 13px 42px; border:1px solid rgba(255,255,255,.16); border-radius:14px;
+    font-size:14px; font-family:inherit; outline:none; background:rgba(0,0,0,.2); color:#fff; backdrop-filter:blur(6px);
+  }
+  .lista {
+    border:1px solid rgba(255,255,255,.14); border-radius:18px; max-height:300px; overflow-y:auto;
+    background:rgba(0,0,0,.18); backdrop-filter:blur(6px);
+  }
+  .item {
+    display:flex; align-items:center; gap:13px; padding:13px 20px;
+    border-bottom:1px solid rgba(255,255,255,.08); cursor:pointer; font-size:14px;
+    color:rgba(255,255,255,.92); transition:background .1s ease;
+  }
+  .item:last-child { border-bottom:none; }
+  .item:hover { background:rgba(255,255,255,.06); }
+  .item .nome { font-weight:500; }
+  .check {
+    width:18px; height:18px; border-radius:6px; flex:none; border:1.5px solid rgba(255,255,255,.3);
+    background:transparent; display:flex; align-items:center; justify-content:center;
+    transition:background .1s ease, border-color .1s ease;
+  }
+  .check.on { background:var(--laranja); border-color:var(--laranja); }
+  .check svg { display:none; }
+  .check.on svg { display:block; }
+  .vazio { padding:26px; text-align:center; color:rgba(255,255,255,.5); font-size:14px; }
+  .acoes { display:flex; gap:10px; margin-top:16px; align-items:center; }
+  .btn-sec {
+    background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.16);
+    padding:11px 20px; border-radius:999px; font-size:13px; font-weight:700; backdrop-filter:blur(6px);
+  }
+  .btn-sec:hover { background:rgba(255,255,255,.14); filter:none; }
+  .contador {
+    margin-left:auto; font-size:12.5px; color:var(--laranja-claro); font-weight:700;
+    background:rgba(255,145,66,.16); border:1px solid rgba(255,145,66,.3); padding:7px 14px; border-radius:999px;
+  }
+  .cta {
+    width:100%; padding:19px; border-radius:18px;
+    background:linear-gradient(120deg, rgba(255,145,66,.95), rgba(226,101,10,.95));
+    color:var(--escuro); border:1px solid rgba(255,255,255,.35);
+    font-family:'Poppins', sans-serif; font-weight:700; font-size:16px; letter-spacing:.2px;
+    box-shadow:0 12px 32px rgba(255,123,32,.4), inset 0 1px 0 rgba(255,255,255,.5); backdrop-filter:blur(10px);
+  }
+  .cta:hover { box-shadow:0 14px 36px rgba(255,123,32,.5), inset 0 1px 0 rgba(255,255,255,.6); filter:none; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="wrap">
+  <div class="glass topo">
+    <div class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 20V10l8-6 8 6v10h-5v-6H9v6H4z" fill="#ff9142"/></svg>
+    </div>
+    <div>
+      <div class="marca">VIC <span>ENGENHARIA</span></div>
+      <div class="sub">Auditoria de Contratos</div>
+    </div>
+  </div>
+
+  <div class="glass secao">
+    <div class="titulo" style="margin-bottom:20px;">Pastas de origem</div>
+    <div id="pastas"></div>
+  </div>
+
+  <div class="glass secao">
+    <div class="titulo-linha">
+      <div class="titulo">Empreendimentos a auditar</div>
+      <div class="titulo-hint">(nenhum marcado = todos)</div>
+    </div>
+    <div class="busca">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="rgba(255,255,255,0.5)" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="busca" placeholder="Buscar empreendimento…" oninput="filtrar(this.value)" />
+    </div>
+    <div class="lista" id="lista"></div>
+    <div class="acoes">
+      <button class="btn-sec" onclick="marcarTodos(true)">Marcar todos</button>
+      <button class="btn-sec" onclick="marcarTodos(false)">Desmarcar todos</button>
+      <div class="contador" id="contador">0 selecionado(s) de 0</div>
+    </div>
+  </div>
+
+  <button class="cta" onclick="confirmar()">Confirmar e iniciar auditoria</button>
+</div>
+
+<script>
+  const PASTAS = [
+    { chave:"pasta_clientes",   rotulo:"Contratos CEF", origem:"CONTRATOS_GERAIS" },
+    { chave:"pasta_pj",         rotulo:"Contratos PJ",  origem:"PJ_GERAIS" },
+    { chave:"pasta_matriculas", rotulo:"Matrículas",    origem:"MATRICULAS" },
+  ];
+  const CHECK_SVG = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1c1210" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const estado = { pasta_clientes:"", pasta_pj:"", pasta_matriculas:"", itens:[], busca:"" };
+
+  function nomeCurto(caminho) {
+    if (!caminho) return "(nenhuma)";
+    const p = caminho.replace(/[\\/]+$/, "").split(/[\\/]/);
+    return p[p.length - 1] || caminho;
+  }
+  function renderPastas() {
+    const box = document.getElementById("pastas");
+    box.innerHTML = "";
+    for (const p of PASTAS) {
+      const caminho = estado[p.chave];
+      const linha = document.createElement("div");
+      linha.className = "pasta";
+      linha.innerHTML =
+        '<div><div class="rot">' + p.rotulo + ' <span class="chave">(' + p.origem + ')</span></div>' +
+        '<div class="sel"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="rgba(255,145,66,0.18)"/><path d="M17 8.5L10.5 15L7 11.5" stroke="#ffb37a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '<span>Pasta selecionada:</span><span class="cam" title="' + (caminho || "") + '">' + nomeCurto(caminho) + '</span></div></div>';
+      const btn = document.createElement("button");
+      btn.className = "btn-pasta";
+      btn.textContent = "Escolher pasta…";
+      btn.onclick = () => escolherPasta(p.chave);
+      linha.appendChild(btn);
+      box.appendChild(linha);
+    }
+  }
+  function renderLista() {
+    const lista = document.getElementById("lista");
+    const q = estado.busca.trim().toLowerCase();
+    const visiveis = estado.itens.filter(it => it.nome.toLowerCase().includes(q));
+    lista.innerHTML = "";
+    if (visiveis.length === 0) {
+      lista.innerHTML = '<div class="vazio">Nenhum empreendimento encontrado.</div>';
+      atualizarContador(); return;
+    }
+    for (const it of visiveis) {
+      const idx = estado.itens.indexOf(it);
+      const row = document.createElement("div");
+      row.className = "item";
+      row.onclick = () => toggle(idx);
+      row.innerHTML = '<span class="check ' + (it.marcado ? "on" : "") + '">' + CHECK_SVG + '</span><span class="nome">' + it.nome + '</span>';
+      lista.appendChild(row);
+    }
+    atualizarContador();
+  }
+  function toggle(idx) { estado.itens[idx].marcado = !estado.itens[idx].marcado; renderLista(); }
+  function filtrar(valor) { estado.busca = valor; renderLista(); }
+  function marcarTodos(valor) { estado.itens.forEach(it => it.marcado = valor); renderLista(); }
+  function atualizarContador() {
+    const n = estado.itens.filter(it => it.marcado).length;
+    document.getElementById("contador").textContent = n + " selecionado(s) de " + estado.itens.length;
+  }
+  async function escolherPasta(chave) {
+    const caminho = await window.pywebview.api.escolher_pasta(chave, estado[chave]);
+    if (caminho) { estado[chave] = caminho; renderPastas(); }
+  }
+  async function confirmar() {
+    await window.pywebview.api.confirmar({
+      pasta_clientes: estado.pasta_clientes,
+      pasta_pj: estado.pasta_pj,
+      pasta_matriculas: estado.pasta_matriculas,
+      empreendimentos: estado.itens.filter(it => it.marcado).map(it => it.nome),
+    });
+  }
+  window.addEventListener("pywebviewready", async () => {
+    const dados = await window.pywebview.api.carregar_dados();
+    estado.pasta_clientes   = dados.pasta_clientes   || "";
+    estado.pasta_pj         = dados.pasta_pj         || "";
+    estado.pasta_matriculas = dados.pasta_matriculas || "";
+    estado.itens = (dados.empreendimentos || []).map(nome => ({ nome, marcado: false }));
+    renderPastas(); renderLista();
+  });
+</script>
